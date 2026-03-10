@@ -174,8 +174,8 @@
         /* Gráfico Empilhado (Share) */
         .share-bar { display: flex; height: 36px; border-radius: 18px; overflow: hidden; margin: 25px 0; font-size: 13px; font-weight: bold; color: white; line-height: 36px; text-align: center; box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);}
         .share-won { background: linear-gradient(90deg, #00a650, #00c760); width: 45%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
-        .share-rank { background: linear-gradient(90deg, #ff7733, #ff8f54); width: 35%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
-        .share-budget { background: linear-gradient(90deg, #e53935, #ff4b47); width: 20%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
+        .share-rank { background: linear-gradient(90deg, #ff7733, #ff8f54); width: 45%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
+        .share-budget { background: linear-gradient(90deg, #e53935, #ff4b47); width: 10%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
         .share-legend { display: flex; gap: 24px; font-size: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px;}
         .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--meli-gray);}
         .dot { width: 14px; height: 14px; border-radius: 4px; }
@@ -302,6 +302,11 @@
             cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 20px rgba(255, 241, 89, 0.2);
         }
         .btn-restart:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(255, 241, 89, 0.3); }
+
+        /* Estilos do Teste Grátis */
+        .free-trial-box { background: var(--meli-blue-light); border-radius: 8px; padding: 12px 15px; margin-top: 15px; border-left: 4px solid var(--meli-blue); }
+        .free-trial-title { color: var(--meli-blue-dark); font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .free-trial-text { color: var(--meli-gray); font-size: 12px; line-height: 1.4; }
 
     </style>
 </head>
@@ -440,26 +445,86 @@
                     </div>
                 </div>
 
-                <h3 style="font-size: 20px; margin: 30px 0 15px 0;">O Impacto do Brand Ads (KPIs)</h3>
-                <p style="font-size: 15px; color: var(--meli-gray); margin-bottom: 25px;">Métricas exclusivas para medir o sucesso da sua campanha de topo de funil:</p>
+                <h3 style="font-size: 20px; margin: 30px 0 15px 0;">Configuração e Métricas da Campanha</h3>
+                
+                <div class="grid-3" style="margin-bottom: 25px;">
+                    <div style="background: var(--white); border: 1px solid var(--border); padding: 25px 20px; border-radius: 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column;">
+                        <div style="font-size: 12px; color: var(--meli-gray); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Início/ Fim da campanha</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--meli-dark);">24/out/2024 - Não termina</div>
+                        
+                        <div class="free-trial-box">
+                            <div class="free-trial-title">✨ Você tem um teste grátis ativo</div>
+                            <div class="free-trial-text">Acesse a edição de início e fim de campanha quando o período de teste terminar.</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--white); border: 1px solid var(--border); padding: 25px 20px; border-radius: 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column;">
+                        <div style="font-size: 12px; color: var(--meli-gray); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Orçamento médio diário</div>
+                        <div style="font-size: 32px; font-weight: 800; color: var(--meli-dark); letter-spacing: -1px;">R$ 57,20</div>
+                        
+                        <div class="free-trial-box">
+                            <div class="free-trial-title">✨ Você tem um teste grátis ativo</div>
+                            <div class="free-trial-text">Você poderá acessar a edição de orçamento quando o período de teste terminar.</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--white); border: 1px solid var(--border); padding: 25px 20px; border-radius: 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column;">
+                        <div style="font-size: 12px; color: var(--meli-gray); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">CPC máximo</div>
+                        <div style="font-size: 32px; font-weight: 800; color: var(--meli-dark); letter-spacing: -1px;">R$ 0,71</div>
+                        
+                        <div class="free-trial-box">
+                            <div class="free-trial-title">✨ Você tem um teste grátis ativo</div>
+                            <div class="free-trial-text">Acesse a edição de CPC quando o período de teste terminar.</div>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="grid-3" style="margin-bottom: 0;">
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 25px 15px; border-radius: 12px; transition: transform 0.2s;">
-                        <span style="font-size: 30px; font-weight: 800; color: var(--meli-blue-dark); margin-bottom: 8px;">Buscas</span>
-                        <span style="font-size: 14px; font-weight: 700; color: var(--meli-dark); text-transform: uppercase; text-align: center;">Pela sua marca</span>
-                        <p style="font-size: 12px; color: var(--meli-gray); text-align: center; margin-top: 10px; line-height: 1.4;">Aumento direto da intenção de compra.</p>
+                <div class="grid-2">
+                    <div class="card" style="margin-bottom: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="font-size: 16px; margin: 0; color: var(--meli-dark);">Anúncios patrocinados</h3>
+                            <span style="background: var(--meli-blue-light); color: var(--meli-blue-dark); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">Automático</span>
+                        </div>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                            <strong style="font-size: 14px; color: var(--meli-dark); display: block; margin-bottom: 6px;">CPC máximo por campanha</strong>
+                            <p style="font-size: 13px; color: var(--meli-gray); line-height: 1.5;">Vamos considerar este valor em todas as ofertas em que seu criativo participar.</p>
+                        </div>
                     </div>
-                    
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 25px 15px; border-radius: 12px; transition: transform 0.2s;">
-                        <span style="font-size: 30px; font-weight: 800; color: var(--meli-blue-dark); margin-bottom: 8px;">Novos</span>
-                        <span style="font-size: 14px; font-weight: 700; color: var(--meli-dark); text-transform: uppercase; text-align: center;">Compradores</span>
-                        <p style="font-size: 12px; color: var(--meli-gray); text-align: center; margin-top: 10px; line-height: 1.4;">Clientes convertidos pela primeira vez.</p>
-                    </div>
-                    
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 25px 15px; border-radius: 12px; transition: transform 0.2s;">
-                        <span style="font-size: 30px; font-weight: 800; color: var(--meli-blue-dark); margin-bottom: 8px;">Visibilidade</span>
-                        <span style="font-size: 14px; font-weight: 700; color: var(--meli-dark); text-transform: uppercase; text-align: center;">(Impressões)</span>
-                        <p style="font-size: 12px; color: var(--meli-gray); text-align: center; margin-top: 10px; line-height: 1.4;">Alcance massivo no topo das buscas.</p>
+
+                    <div class="card" style="margin-bottom: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                            <h3 style="font-size: 16px; margin: 0; color: var(--meli-dark);">Métricas de competitividade</h3>
+                            <span style="font-size: 12px; color: var(--meli-gray); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                                Últimos 7 dias 
+                                <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px;">Comparado com: <strong>Nenhum</strong></span>
+                            </span>
+                        </div>
+                        
+                        <div style="font-size: 13px; font-weight: 700; color: var(--meli-dark); margin-bottom: 10px;">Distribuição de impressões da sua campanha</div>
+                        
+                        <div class="share-bar" style="height: 28px; line-height: 28px; font-size: 12px; margin: 0 0 15px 0;">
+                            <div class="share-won" style="width: 45%;">45%</div>
+                            <div class="share-rank" style="width: 45%; background: linear-gradient(90deg, #f59e0b, #fbbf24);">45%</div>
+                            <div class="share-budget" style="width: 10%;">10%</div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 8px;"><div class="dot won" style="width:12px;height:12px;"></div> <span style="color: var(--meli-gray);">Ganhas</span></div>
+                                <strong>45%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 8px;"><div class="dot rank" style="width:12px;height:12px; background: #f59e0b;"></div> <span style="color: var(--meli-gray);">Perdidas por classificação</span></div>
+                                <strong>45%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 8px;"><div class="dot budget" style="width:12px;height:12px;"></div> <span style="color: var(--meli-gray);">Perdidas por orçamento</span></div>
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <strong>10%</strong>
+                                    <span style="color: var(--meli-blue); font-weight: 600; cursor: pointer;">Ajustar orçamento</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
