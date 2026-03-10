@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento Comercial: Ecossistema Mercado Ads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variáveis de Cores Premium Meli */
+        :root {
+            --meli-yellow: #fff159;
+            --meli-yellow-dark: #f0e13c;
+            --meli-blue: #3483fa;
+            --meli-blue-dark: #2968c8;
+            --meli-blue-light: #e6f0ff;
+            --meli-dark: #222222;
+            --meli-gray: #555555;
+            --meli-light-gray: #f0f0f0;
+            --meli-bg: #f8f9fa;
+            --white: #ffffff;
+            --success: #00a650;
+            --warning: #ff7733;
+            --error: #e53935;
+            --border: #eaeaec;
+            
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        body { background-color: var(--meli-bg); color: var(--meli-dark); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+        /* Componentes Base */
+        .card { 
+            background: var(--white); 
+            border-radius: 16px; 
+            box-shadow: var(--shadow-sm); 
+            padding: 28px; 
+            margin-bottom: 24px; 
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn { 
+            padding: 12px 24px; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            border: none; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            font-size: 14px; 
+            text-align: center; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-blue { background-color: var(--meli-blue); color: var(--white); box-shadow: 0 4px 10px rgba(52, 131, 250, 0.2); }
+        .btn-blue:hover { background-color: var(--meli-blue-dark); transform: translateY(-1px); box-shadow: 0 6px 15px rgba(52, 131, 250, 0.3); }
+        .btn-yellow { background-color: var(--meli-yellow); color: var(--meli-dark); box-shadow: 0 4px 10px rgba(255, 241, 89, 0.4);}
+        .btn-yellow:hover { background-color: var(--meli-yellow-dark); transform: translateY(-1px); }
+
+        .divider { border: none; border-top: 2px dashed var(--border); margin: 40px 0; }
+
+        /* Header e Controles */
+        header { 
+            background-color: var(--meli-yellow); 
+            padding: 16px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            z-index: 100; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        header h1 { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 12px; color: var(--meli-dark); letter-spacing: -0.5px;}
+        .controls { display: flex; gap: 20px; align-items: center; }
+        .slide-counter { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 20px;}
+
+        /* Layout do Dashboard */
+        .dashboard-layout { display: flex; flex: 1; max-width: 1500px; margin: 0 auto; width: 100%; gap: 30px; padding: 30px; overflow: hidden; }
+        
+        /* Menu Lateral Estilo Moderno */
+        .sidebar { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; }
+        .sidebar-menu { list-style: none; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; padding-right: 10px; }
+        .sidebar-menu li { 
+            padding: 16px 20px; 
+            border-radius: 12px; 
+            color: var(--meli-gray); 
+            font-size: 15px; 
+            font-weight: 600;
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            transition: all 0.2s ease; 
+            background: transparent;
+        }
+        .sidebar-menu li:hover { background: rgba(0,0,0,0.03); color: var(--meli-dark); transform: translateX(4px);}
+        .sidebar-menu li.active { 
+            color: var(--meli-blue-dark); 
+            background: var(--meli-blue-light); 
+            box-shadow: inset 4px 0 0 var(--meli-blue);
+        }
+
+        /* Área do Slider Principal */
+        .main-content { 
+            flex: 1; 
+            position: relative; 
+            overflow-y: auto; 
+            background: var(--white); 
+            border-radius: 20px; 
+            padding: 45px 55px; 
+            box-shadow: var(--shadow-lg); 
+            scroll-behavior: smooth; 
+        }
+        
+        /* Scrollbar customizada */
+        .main-content::-webkit-scrollbar { width: 8px; }
+        .main-content::-webkit-scrollbar-track { background: var(--meli-bg); border-radius: 10px;}
+        .main-content::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 10px; }
+        
+        .slide { display: none; animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px);}
+        .slide.active { display: block; }
+        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
+
+        .slide-header { margin-bottom: 35px; border-bottom: 2px solid var(--meli-bg); padding-bottom: 20px; }
+        .slide-title { font-size: 32px; font-weight: 700; color: var(--meli-dark); margin-bottom: 8px; letter-spacing: -0.5px;}
+        .slide-subtitle { font-size: 16px; color: var(--meli-gray); line-height: 1.5; }
+
+        /* --- Blocos de Explicação Premium --- */
+        .explanation-box { 
+            background: #f8fafc; 
+            border-left: 4px solid var(--meli-blue); 
+            padding: 20px 25px; 
+            margin-bottom: 25px; 
+            border-radius: 0 12px 12px 0; 
+            font-size: 15px; 
+            line-height: 1.7; 
+            color: #334155; 
+            box-shadow: var(--shadow-sm);
+        }
+        .sales-tip { 
+            background: linear-gradient(145deg, #FFFDE7, #FFF9C4); 
+            border: 1px solid rgba(240, 225, 60, 0.5); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-top: 20px; 
+            font-size: 15px; 
+            color: #444; 
+            line-height: 1.6;
+            box-shadow: var(--shadow-sm);
+        }
+        .sales-tip strong { color: #b7950b; font-size: 16px;}
+        .formula-box { 
+            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            color: var(--meli-yellow); 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 20px; 
+            margin: 20px 0; 
+            font-weight: bold; 
+            letter-spacing: 1.5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Gráfico Empilhado (Share) */
+        .share-bar { display: flex; height: 36px; border-radius: 18px; overflow: hidden; margin: 25px 0; font-size: 13px; font-weight: bold; color: white; line-height: 36px; text-align: center; box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);}
+        .share-won { background: linear-gradient(90deg, #00a650, #00c760); width: 45%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
+        .share-rank { background: linear-gradient(90deg, #ff7733, #ff8f54); width: 35%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
+        .share-budget { background: linear-gradient(90deg, #e53935, #ff4b47); width: 20%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);}
+        .share-legend { display: flex; gap: 24px; font-size: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px;}
+        .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--meli-gray);}
+        .dot { width: 14px; height: 14px; border-radius: 4px; }
+        .dot.won { background: var(--success); }
+        .dot.rank { background: var(--warning); }
+        .dot.budget { background: var(--error); }
+
+        /* Tabelas Clean */
+        .table-wrapper { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin-bottom: 20px;}
+        .data-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; background: var(--white);}
+        .data-table th { background-color: #f8fafc; padding: 18px; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;}
+        .data-table td { padding: 18px; border-bottom: 1px solid var(--border); color: #334155; line-height: 1.5;}
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover { background-color: #fcfcfc; }
+        
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; letter-spacing: 0.5px; display: inline-block;}
+        .status-active { background: #dcfce7; color: #166534; }
+
+        /* Grids Modernos */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 25px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
+        
+        .metric-card { 
+            text-align: center; 
+            padding: 30px 20px; 
+            background: linear-gradient(145deg, #ffffff, #f8f9fa); 
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+        .metric-value { font-size: 36px; font-weight: 800; color: var(--meli-blue); display: block; margin-bottom: 8px; letter-spacing: -1px;}
+        .metric-label { font-size: 14px; color: var(--meli-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+
+        .action-card { background: var(--white); border: 1px solid var(--border); padding: 25px 20px; border-radius: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 140px; transition: transform 0.2s; cursor: default;}
+        .action-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--meli-blue-light);}
+        .action-card h4 { font-size: 16px; color: var(--meli-blue-dark); margin-bottom: 10px;}
+        .action-card p { font-size: 13px; color: var(--meli-gray); line-height: 1.5;}
+
+        /* Barras de Progresso Audiência */
+        .bar-row { display: flex; align-items: center; margin-bottom: 15px; font-size: 14px; }
+        .bar-label { width: 160px; color: #334155; font-weight: 600; }
+        .bar-container { flex: 1; background: var(--meli-light-gray); height: 12px; border-radius: 6px; overflow: hidden; margin: 0 20px; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--meli-blue-dark), var(--meli-blue)); border-radius: 6px;}
+        .bar-percent { width: 45px; font-weight: bold; text-align: right; color: var(--meli-dark);}
+
+        /* Mockup Premium Celular */
+        .mockup-phone { 
+            width: 320px; 
+            height: 600px; 
+            border: 14px solid #111; 
+            border-radius: 40px; 
+            margin: 0 auto; 
+            background: var(--meli-bg); 
+            position: relative; 
+            overflow: hidden; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
+        }
+        /* Notch do celular */
+        .mockup-phone::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 25px; background: #111; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; z-index: 10;
+        }
+        .mockup-screen { padding: 40px 15px 15px 15px; background: #fff; height: 100%; display: flex; flex-direction: column; }
+        .ad-post { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); margin-top: 15px; background: #fff;}
+        .ad-header { padding: 12px; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: bold; }
+        .ad-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--meli-yellow-dark), var(--meli-yellow)); border-radius: 50%; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);}
+        .ad-image { height: 220px; background: #e2e8f0; position: relative; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-weight: 600; font-size: 14px;}
+        .ad-coupon-badge { position: absolute; bottom: 12px; left: 12px; background: var(--meli-dark); color: var(--meli-yellow); padding: 6px 12px; font-size: 12px; font-weight: bold; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
+        .ad-footer { padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top: 1px solid var(--border);}
+
+        /* Mockup Brand Ads */
+        .brand-ad-mockup { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-md); background: #fff;}
+        .brand-ad-top { background: linear-gradient(135deg, #1e293b, #0f172a); color: var(--white); padding: 20px 25px; display: flex; align-items: center; gap: 15px; }
+        .brand-logo-mock { width: 55px; height: 55px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--meli-blue); font-weight: 800; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
+        .brand-headline { flex: 1; font-size: 18px; font-weight: bold; line-height: 1.3;}
+        .brand-cta { background: var(--meli-blue); color: var(--white); padding: 10px 18px; border-radius: 6px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
+        .brand-ad-products { display: flex; background: var(--white); padding: 20px; gap: 15px; }
+        .brand-prod-mock { flex: 1; height: 140px; background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 13px; font-weight: 600; text-align: center; padding: 10px; transition: transform 0.2s;}
+        .brand-prod-mock:hover { transform: translateY(-3px); border-style: solid; border-color: var(--meli-blue-light); background: #f8fafc;}
+
+        /* Utilities */
+        .text-gradient { background: linear-gradient(90deg, var(--meli-blue-dark), var(--meli-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .list-styled { list-style: none; padding-left: 5px;}
+        .list-styled li { margin-bottom: 12px; font-size: 15px; line-height: 1.6; color: #444; position: relative; padding-left: 28px;}
+        .list-styled li::before { content: '→'; position: absolute; left: 0; color: var(--meli-blue); font-weight: bold;}
+
+        /* Overlay Finalização Animada */
+        .finish-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(30, 41, 59, 0.95);
+            z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+        .finish-overlay.active {
+            opacity: 1; pointer-events: all;
+        }
+        .finish-content {
+            text-align: center; color: white;
+            transform: scale(0.8); opacity: 0; 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+        }
+        .finish-overlay.active .finish-content {
+            transform: scale(1); opacity: 1;
+        }
+        .success-checkmark {
+            width: 100px; height: 100px; background: var(--success); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 25px auto; font-size: 50px; color: white;
+            box-shadow: 0 0 0 0 rgba(0, 166, 80, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 166, 80, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 25px rgba(0, 166, 80, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 166, 80, 0); }
+        }
+        .finish-title { font-size: 42px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+        .finish-subtitle { font-size: 18px; color: #cbd5e1; margin-bottom: 40px; line-height: 1.5; max-width: 500px;}
+        .btn-restart { 
+            background: var(--meli-yellow); color: var(--meli-dark); font-size: 16px; 
+            padding: 16px 40px; border-radius: 40px; font-weight: bold; border: none; 
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 20px rgba(255, 241, 89, 0.2);
+        }
+        .btn-restart:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(255, 241, 89, 0.3); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><span style="font-size: 24px;">📈</span> Treinamento Comercial: Mercado Ads</h1>
+        <div class="controls">
+            <span class="slide-counter">Página <span id="currentSlide">1</span> de <span id="totalSlides">7</span></span>
+            <button class="btn btn-blue" id="prevBtn" disabled>◀ Anterior</button>
+            <button class="btn btn-blue" id="nextBtn">Próxima ▶</button>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="active">📦 Product Ads (Fundo Funil)</li>
+                <li>🌟 Brand Ads (Topo Funil)</li>
+                <li>💡 Evolução: Display vs Follow</li>
+                <li>📊 Minha Página (Hub)</li>
+                <li>🎟️ Estratégia de Cupons</li>
+                <li>📢 Comunicação e Stories</li>
+                <li>👥 Entendendo a Audiência</li>
+            </ul>
+        </aside>
+
+        <main class="main-content" id="mainScroll">
+
+            <div class="slide active">
+                <div class="slide-header">
+                    <h2 class="slide-title">Product Ads: A Arquitetura da Conversão</h2>
+                    <p class="slide-subtitle">Engenharia de precisão para capturar intenção de compra no Fundo de Funil.</p>
+                </div>
+
+                <div class="explanation-box" style="border-left-color: var(--warning);">
+                    <strong>O Foco é Transacional:</strong> Product Ads não servem para contar a missão da empresa. Servem para destacar soluções ("mais rápido, mais preciso"). A recomendação comercial é: Se o cliente tem verba curta, <strong>aloque 100% da verba inicial aqui</strong> para gerar fluxo de caixa rápido.
+                </div>
+
+                <div class="grid-2">
+                    <div class="card" style="margin-bottom: 0;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px; color: var(--meli-blue-dark);">A Matemática do Leilão</h3>
+                        <p style="font-size: 14px; color: var(--meli-gray); margin-bottom: 10px;">No Mercado Livre, não ganha apenas quem paga mais. Ganha quem tem o melhor Índice de Qualidade (Ad Score):</p>
+                        
+                        <div class="formula-box">Ad Rank = CPC Máx × Ad Score</div>
+                        
+                        <ul class="list-styled">
+                            <li><strong>CPC Máximo:</strong> Calibrado pelo ACOS que o lojista definiu.</li>
+                            <li><strong>Ad Score (Qualidade):</strong> Avaliado pelo histórico de vendas, qualidade das fotos e competitividade do preço.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 0; background: var(--meli-bg); border: none;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">Métricas Essenciais (KPIs)</h3>
+                        <ul style="list-style: none; font-size: 15px; line-height: 1.8; color: var(--meli-dark);">
+                            <li style="margin-bottom: 12px;">📉 <strong style="color: var(--meli-blue);">ACOS:</strong> Indica qual percentual da receita gerada pelo anúncio foi "sacrificado" para pagar o clique.</li>
+                            <li style="margin-bottom: 12px;">📊 <strong style="color: var(--meli-blue);">TACOS:</strong> Relaciona o gasto publicitário com a soma da receita paga e orgânica.</li>
+                            <li>💰 <strong style="color: var(--success);">ROAS:</strong> Métrica fundamental que mede a receita gerada para cada real investido. Avalia a eficácia direta.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <h3 style="font-size: 20px; margin-bottom: 10px; color: var(--meli-dark);">Métricas de Competitividade: Share de Impressões</h3>
+                    <p style="font-size: 15px; color: var(--meli-gray); margin-bottom: 20px;">Como explicar para o vendedor por que o anúncio dele não aparece o tempo todo.</p>
+                    
+                    <div class="share-legend">
+                        <div class="legend-item"><div class="dot won"></div> <span>Impressões Ganhas (45%)</span></div>
+                        <div class="legend-item"><div class="dot rank"></div> <span>Perdidas por Rank/Ad Score (35%)</span></div>
+                        <div class="legend-item"><div class="dot budget"></div> <span>Perdidas por Orçamento (20%)</span></div>
+                    </div>
+                    
+                    <div class="share-bar">
+                        <div class="share-won">45%</div>
+                        <div class="share-rank">35%</div>
+                        <div class="share-budget">20%</div>
+                    </div>
+
+                    <div class="grid-2" style="margin-top: 25px; font-size: 14px; line-height: 1.7;">
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid var(--error);">
+                            <strong style="color: var(--error); font-size: 15px;">🔴 Perdidas por Orçamento:</strong> Mostra as vendas que a loja <em>deixou de fazer</em> porque a campanha esgotou a cota diária cedo. <strong>Solução: Aumentar limite.</strong>
+                        </div>
+                        <div style="background: #fffbeb; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                            <strong style="color: #d97706; font-size: 15px;">🟡 Perdidas por Rank:</strong> Mostra as vezes em que perdeu o leilão para um concorrente melhor. <strong>Solução: Melhorar fotos/preço.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-header">
+                    <h2 class="slide-title">Brand Ads: Liderando a Descoberta</h2>
+                    <p class="slide-subtitle">Destaque sua marca na "Posição 0" e domine a decisão de compra antes da concorrência.</p>
+                </div>
+
+                <div class="explanation-box" style="border-left-color: #9c27b0;">
+                    <strong style="color: #7e22ce;">O Foco é Autoridade (Topo de Funil):</strong> Ideal para Lojas Oficiais e grandes marcas. O objetivo não é apenas a venda imediata, mas garantir que a sua loja seja a primeira a ser vista e lembrada quando o cliente pesquisar por uma categoria.
+                </div>
+
+                <div class="grid-2" style="align-items: start;">
+                    <div>
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">A Exclusiva "Posição 0"</h3>
+                        <div class="brand-ad-mockup" style="margin-bottom: 20px;">
+                            <div class="brand-ad-top">
+                                <div class="brand-logo-mock">M</div>
+                                <div class="brand-headline">
+                                    A nova linha premium chegou!
+                                    <div style="font-size: 12px; font-weight: normal; margin-top: 4px; color: #94a3b8;">Patrocinado por Loja Oficial</div>
+                                </div>
+                                <div class="brand-cta">Ir à loja</div>
+                            </div>
+                            <div class="brand-ad-products">
+                                <div class="brand-prod-mock">Produto<br>Carro-Chefe 1</div>
+                                <div class="brand-prod-mock">Produto<br>Carro-Chefe 2</div>
+                                <div class="brand-prod-mock">Lançamento<br>Exclusivo</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="card" style="margin-bottom: 20px; border-left: 4px solid var(--success); background: #f0fdf4; border-top:none; border-right:none; border-bottom:none; border-radius: 8px;">
+                            <h3 style="font-size: 17px; margin-bottom: 10px; color: #166534;">O Poder do Efeito Halo 🌟</h3>
+                            <p style="font-size: 14px; line-height: 1.6; color: #166534;">
+                                Quem vê a sua marca no topo hoje, pesquisa pelo seu nome amanhã. O Brand Ads gera um reconhecimento que <strong>barateia os custos de conversão</strong> (ROAS) no futuro lá no Product Ads.
+                            </p>
+                        </div>
+                        
+                        <div class="card" style="margin-bottom: 0; background: var(--white);">
+                            <h3 style="font-size: 17px; margin-bottom: 15px;">Vantagens Comerciais</h3>
+                            <ul style="list-style: none; font-size: 14px; line-height: 1.8; color: var(--meli-dark);">
+                                <li style="margin-bottom: 10px;">👑 <strong>Zero Concorrência Visual:</strong> Espaço gigante e exclusivo antes da lista orgânica.</li>
+                                <li style="margin-bottom: 10px;">🏪 <strong>Tráfego Blindado:</strong> 90% dos cliques vão direto para os produtos, e 10% levam para a "Minha Página". Em ambos, não há concorrência.</li>
+                                <li>🎯 <strong>Defesa de Território:</strong> Proteja as palavras-chave da sua própria marca.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 20px; margin: 30px 0 15px 0;">Como medir o Sucesso (KPIs Práticos)</h3>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">O que analisar?</th>
+                                <th style="width: 70%;">Significado prático para o lojista</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700; color: var(--meli-blue-dark);">Share of Voice (Domínio)</td>
+                                <td>Mede o espaço que a marca ocupa na tela em relação aos concorrentes diretos da mesma categoria.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: var(--meli-blue-dark);">Busca pelo Nome da Loja</td>
+                                <td>A prova definitiva de que a campanha funcionou: clientes passam a digitar o nome da marca direto na barra de busca.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-header">
+                    <h2 class="slide-title">A Evolução: Do Display ao Follow Ads</h2>
+                    <p class="slide-subtitle">Contextualizando a mudança de paradigma e a operação do novo formato de retenção.</p>
+                </div>
+
+                <div class="explanation-box">
+                    <strong>Conectando as estratégias:</strong> Depois de trabalhar Produto (conversão) e Marca (descoberta), precisamos reter esses clientes. Saímos da era de "comprar espaço na tela" para a era de "construir uma base própria de seguidores".
+                </div>
+
+                <div class="grid-2">
+                    <div class="card" style="border-top: 4px solid #cbd5e1; margin-bottom: 0;">
+                        <h3 style="color: #475569; margin-bottom: 10px; font-size: 20px;">O Passado: Display Ads</h3>
+                        <p style="font-size: 14px; color: #64748b; margin-bottom: 20px;">Focado inteiramente no Topo do Funil (Awareness).</p>
+                        
+                        <ul style="list-style: none; font-size: 14px; line-height: 1.7;">
+                            <li style="margin-bottom: 12px;">📉 <strong>Para que servia:</strong> Gerar cliques e apresentar a loja para um tráfego massivo.</li>
+                            <li style="margin-bottom: 12px;">📉 <strong>O Atrito:</strong> Levava o cliente até a página da loja, mas o deixava solto para procurar o produto. A taxa de fuga era alta.</li>
+                            <li>📉 <strong>A Operação:</strong> Exigia criação manual de banners e textos (custo de design).</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="border-top: 4px solid var(--meli-blue); background: #f0f7ff; margin-bottom: 0;">
+                        <h3 style="color: var(--meli-blue-dark); margin-bottom: 10px; font-size: 20px;">O Futuro: Follow Ads</h3>
+                        <p style="font-size: 14px; color: #334155; margin-bottom: 20px;">Focado no Fundo do Funil (Retenção e Performance).</p>
+                        
+                        <ul style="list-style: none; font-size: 14px; line-height: 1.7;">
+                            <li style="margin-bottom: 12px;">🚀 <strong>Para que serve:</strong> Construir uma base de <em>Seguidores</em> e converter a venda de forma imediata.</li>
+                            <li style="margin-bottom: 12px;">🚀 <strong>A Solução:</strong> Integra um Cupom nativo no anúncio. O cliente ganha o desconto e é levado direto para o produto.</li>
+                            <li>🚀 <strong>A Operação:</strong> 100% automatizado. Puxa as fotos reais dos seus anúncios de melhor performance.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sales-tip" style="margin-top: 25px; margin-bottom: 35px;">
+                    <strong>💡 Dica de Abordagem:</strong> "Fulano, o Mercado Livre percebeu que apenas te dar cliques não era suficiente. Criamos o Follow Ads porque ele amarra o clique ao desconto, garantindo que o cliente siga sua loja e compre na hora."
+                </div>
+
+                <h3 style="font-size: 20px; color: var(--meli-dark); margin-bottom: 15px;">Tabela Prática: Quebra de Objeções</h3>
+                
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">O que o cliente pergunta?</th>
+                                <th style="width: 35%;">No formato Antigo (Display)</th>
+                                <th style="width: 35%; background-color: var(--meli-blue-light); color: var(--meli-blue-dark);">No Novo (Follow Ads)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700; background: #f8fafc;">"Qual é o objetivo?"</td>
+                                <td>Atrair curiosos (visitas genéricas).</td>
+                                <td style="color: var(--meli-blue-dark); font-weight: 700; background: #f0f7ff;">Atrair Seguidores e gerar venda imediata.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; background: #f8fafc;">"Vou criar banners?"</td>
+                                <td>Sim, gastava tempo montando a arte.</td>
+                                <td style="background: #f0f7ff;"><strong>Não.</strong> A ferramenta puxa as melhores fotos sozinha.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; background: #f8fafc;">"E o desconto?"</td>
+                                <td>Só se estivesse escrito na imagem.</td>
+                                <td style="background: #f0f7ff;">O botão do cupom brilha e força o clique.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="divider">
+
+                <h3 style="font-size: 24px; font-weight: 700; color: var(--meli-dark); margin-bottom: 20px;">Investimento e Demonstração</h3>
+                <div class="grid-2" style="align-items: center;">
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="card" style="margin-bottom: 0;">
+                            <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--meli-blue-dark);">Como a inteligência funciona?</h3>
+                            <p style="font-size: 14px; line-height: 1.6; color: #444;">
+                                O lojista define um <strong>orçamento médio diário</strong>. O sistema distribui o gasto inteligente conforme as oportunidades do dia.<br><br>
+                                <strong>A Trava de Segurança:</strong> Ao final de 30 dias, o gasto nunca excederá a média diária multiplicada por 30,4.
+                            </p>
+                        </div>
+
+                        <div class="explanation-box" style="margin-bottom: 0; border-radius: 8px;">
+                            <strong>Roteiro da Demonstração:</strong><br><br>
+                            1. "Observe o celular. O anúncio aparece no feed."<br>
+                            2. "O gatilho avisa que tem desconto se seguir."<br>
+                            3. "<strong>Clique no botão azul no celular ali do lado.</strong>"<br>
+                            4. "Viram? Ele entrega o cupom e muda para <em>'Ver Ofertas'</em>, mantendo o cliente no impulso da compra."
+                        </div>
+                    </div>
+
+                    <div class="mockup-phone">
+                        <div class="mockup-screen">
+                            <div style="height: 6px; background: #e2e8f0; border-radius: 3px; margin-bottom: 20px; width: 40%; margin-left: auto; margin-right: auto;"></div>
+                            
+                            <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 5px;">Sugestão para você</p>
+                            
+                            <div class="ad-post">
+                                <div class="ad-header">
+                                    <div class="ad-avatar"></div>
+                                    <div style="font-size: 14px;">Sua Loja Oficial</div>
+                                </div>
+                                <div class="ad-image">
+                                    <span>Fotos dos Produtos Reais</span>
+                                    <div class="ad-coupon-badge">-10% OFF NO APP</div>
+                                </div>
+                                <div class="ad-footer" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 16px;">
+                                    <div style="font-size: 13px; color: var(--meli-dark); font-weight: 700; text-align: center;">Desconto exclusivo para seguidores</div>
+                                    <button class="btn btn-blue" id="mockup-btn" style="width: 100%; padding: 14px; font-size: 15px; border-radius: 8px; box-shadow: none;">+ Seguir</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-header">
+                    <h2 class="slide-title">Minha Página: O Hub da Marca</h2>
+                    <p class="slide-subtitle">A vitrine principal onde o vendedor constrói autoridade e captura clientes.</p>
+                </div>
+
+                <div class="explanation-box">
+                    <strong>Expansão de Conteúdo:</strong> A Minha Página permite organizar o conteúdo de forma inteligente, criando <strong>Subpáginas</strong> para agrupar produtos por categorias, temporada ou compartilhar eventos especiais. Um banner de promoção pode levar direto para uma subpágina específica.
+                </div>
+
+                <div class="grid-3">
+                    <div class="metric-card">
+                        <span class="metric-value">15.430</span>
+                        <span class="metric-label">Visitas à página</span>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(145deg, #f0fdf4, #ffffff); border-color: #bbf7d0;">
+                        <span class="metric-value" style="color: var(--success);">+ 852</span>
+                        <span class="metric-label">Novos Seguidores</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">R$ 4.290</span>
+                        <span class="metric-label">Vendas com Cupom</span>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h3 style="font-size: 18px; margin-bottom: 20px;">Aceleração de Visitas (Tráfego)</h3>
+                        <p style="font-size: 14px; color: var(--meli-gray); margin-bottom: 20px;">Como orientar o lojista a atrair público de forma segura:</p>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px;"><span>📱 Orgânico Externo</span> <strong>Links em Redes Sociais</strong></div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px;"><span>💬 Orgânico Interno</span> <strong>Mercado Livre Vídeos (Clips)</strong></div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px;"><span>💬 Pós-Venda</span> <strong>Incentivar o "Seguir"</strong></div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 14px;"><span>📢 Publicidade (Ads)</span> <strong class="text-gradient">Follow Ads / Brand Ads</strong></div>
+                    </div>
+
+                    <div class="card" style="background: var(--meli-bg); border: none;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">Checklist de Elegibilidade</h3>
+                        <ul style="list-style: none; font-size: 14px; line-height: 2;">
+                            <li>✅ Ter anúncios de produtos ativos</li>
+                            <li>✅ Reputação laranja ou superior</li>
+                            <li>✅ Sem restrições ou pagamentos pendentes</li>
+                            <li>✅ Não ser Afiliado</li>
+                            <li style="margin-top: 20px; border-top: 1px solid #cbd5e1; padding-top: 20px; font-size: 15px;">
+                                <strong>Custo Mensal (Comercial):</strong><br>
+                                <span style="color: var(--meli-gray);">🇧🇷 Brasil (MLB): R$ 99,00 | 🇦🇷 Argentina: Gratuito</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-header">
+                    <h2 class="slide-title">Fidelização Ativa: Gestão de Cupons</h2>
+                    <p class="slide-subtitle">Como usar incentivos financeiros de forma estratégica (não como prejuízo).</p>
+                </div>
+
+                <div class="explanation-box">
+                    <strong>A principal objeção:</strong> "Dar cupom diminui meu lucro". <br>
+                    <strong>A resposta comercial:</strong> O cupom não é prejuízo, é investimento. É mais barato dar 10% de desconto na primeira compra para ganhar o contato do cliente, do que pagar por anúncios toda vez que ele for comprar. 
+                </div>
+
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <h3 style="font-size: 18px; padding: 25px 25px 15px 25px; margin: 0;">Tabela Tática de Cupons</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Campanha</th>
+                                <th>Momento de Uso</th>
+                                <th>Desconto</th>
+                                <th>Status e Conversão</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700;">BEMVINDO10</td>
+                                <td>Atrair Novos Seguidores (Isca)</td>
+                                <td style="color: var(--meli-blue-dark); font-weight: 800; font-size: 16px;">10% OFF</td>
+                                <td><span class="status-badge status-active">Ativo</span> (145 resgatados)</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700;">VOLTA5</td>
+                                <td>Recuperar Carrinhos Abandonados</td>
+                                <td style="color: var(--meli-blue-dark); font-weight: 800; font-size: 16px;">5% OFF</td>
+                                <td><span class="status-badge status-active">Automático</span> (89 usos diretos)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sales-tip">
+                    <strong>🎯 Foco Comercial:</strong> Convença o lojista a configurar o <strong>Cupom de Carrinho Abandonado</strong> hoje mesmo. É a ferramenta com maior taxa de conversão imediata e prova o valor da ferramenta na hora.
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-header">
+                    <h2 class="slide-title">Canal de Transmissão e Stories</h2>
+                    <p class="slide-subtitle">A comunicação direta e ativa com sua comunidade de seguidores.</p>
+                </div>
+
+                <div class="explanation-box" style="border-left-color: var(--success);">
+                    <strong>O poder da ferramenta:</strong> Com o canal de transmissão, o vendedor se comunica de forma direta com os compradores para enviar novidades e ofertas. Os usuários recebem notificações dessas mensagens tanto nos computadores quanto nos celulares.
+                </div>
+
+                <h3 style="font-size: 18px; margin-bottom: 20px;">Opções de Comunicação (O que comunicar)</h3>
+                <div class="grid-4">
+                    <div class="action-card">
+                        <h4>🚀 Lançamento</h4>
+                        <p>Aumenta a visibilidade dos produtos anunciados nos últimos 30 dias.</p>
+                    </div>
+                    <div class="action-card">
+                        <h4>🎟️ Cupom de Desconto</h4>
+                        <p>Fidelize seus seguidores oferecendo um desconto exclusivo.</p>
+                    </div>
+                    <div class="action-card">
+                        <h4>🔥 Produto em Promoção</h4>
+                        <p>Atraia possíveis compradores com uma oferta especial.</p>
+                    </div>
+                    <div class="action-card" style="border: 2px solid var(--meli-blue); box-shadow: 0 4px 12px rgba(52, 131, 250, 0.15);">
+                        <h4>🛒 Carrinhos Abandonados</h4>
+                        <p>Converta em vendas os carrinhos que ficaram em aberto pelo público.</p>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card" style="background: var(--meli-bg); border: none;">
+                        <h4 style="margin-bottom: 12px; font-size: 16px;">Exibição nos Stories</h4>
+                        <p style="font-size: 14px; color: var(--meli-gray); line-height: 1.6;">Seus stories ficarão visíveis por <strong>48 horas</strong> na página inicial e na seção "Clips". Além disso, elas serão exibidas na sua loja para os visitantes.</p>
+                    </div>
+                    <div class="card" style="background: var(--meli-bg); border: none;">
+                        <h4 style="margin-bottom: 12px; font-size: 16px;">Exibição no Canal</h4>
+                        <p style="font-size: 14px; color: var(--meli-gray); line-height: 1.6;">As mensagens para o canal de transmissão aparecerão em "Notificações" e poderão ser visualizadas na aba "Lojas que sigo".</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-header">
+                    <h2 class="slide-title">Painel de Audiências e Valor do Cliente</h2>
+                    <p class="slide-subtitle">Entenda quem compra para parar de "atirar no escuro" e prove o valor do LTV.</p>
+                </div>
+
+                <div class="explanation-box">
+                    <strong>Como usar isso na venda?</strong> Muitos lojistas baseiam seus estoques no "achismo". Mostrar este painel prova que o ML entrega a "inteligência" nas mãos dele. E o principal: justifica o motivo financeiro de buscar seguidores.
+                </div>
+
+                <div class="grid-2">
+                    <div class="card" style="margin-bottom: 0;">
+                        <h3 style="font-size: 18px; margin-bottom: 25px;">Idade e Gênero Predominante</h3>
+                        <div class="bar-row">
+                            <span class="bar-label">18 a 24 anos</span>
+                            <div class="bar-container"><div class="bar-fill" style="width: 15%;"></div></div>
+                            <span class="bar-percent">15%</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">25 a 34 anos</span>
+                            <div class="bar-container"><div class="bar-fill" style="width: 45%;"></div></div>
+                            <span class="bar-percent">45%</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">35 a 44 anos</span>
+                            <div class="bar-container"><div class="bar-fill" style="width: 30%;"></div></div>
+                            <span class="bar-percent">30%</span>
+                        </div>
+                        <div style="border-top: 1px solid var(--border); padding-top: 20px; margin-top: 25px; display: flex; gap: 20px; text-align: center;">
+                            <div style="flex: 1;"><div style="font-size: 24px; color: var(--meli-blue-dark); font-weight: 800;">60%</div><div style="font-size: 12px; font-weight: 600; color: var(--meli-gray); text-transform: uppercase; margin-top: 4px;">Feminino</div></div>
+                            <div style="flex: 1;"><div style="font-size: 24px; color: var(--meli-blue-dark); font-weight: 800;">40%</div><div style="font-size: 12px; font-weight: 600; color: var(--meli-gray); text-transform: uppercase; margin-top: 4px;">Masculino</div></div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 0;">
+                        <h3 style="font-size: 18px; margin-bottom: 25px;">Top Categorias de Navegação</h3>
+                        <div class="bar-row">
+                            <span class="bar-label">Eletrônicos & Áudio</span>
+                            <div class="bar-container"><div class="bar-fill" style="width: 78%; background: linear-gradient(90deg, #00a650, #00c760);"></div></div>
+                            <span class="bar-percent">78%</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">Acessórios Veículos</span>
+                            <div class="bar-container"><div class="bar-fill" style="width: 65%; background: linear-gradient(90deg, #00a650, #00c760);"></div></div>
+                            <span class="bar-percent">65%</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">Casa & Decoração</span>
+                            <div class="bar-container"><div class="bar-fill" style="width: 42%; background: linear-gradient(90deg, #00a650, #00c760);"></div></div>
+                            <span class="bar-percent">42%</span>
+                        </div>
+                        
+                        <div class="sales-tip" style="padding: 15px; margin-top: 30px;">
+                            <strong>Exemplo prático:</strong> "Se 78% do seu público navega em Eletrônicos, foque as campanhas de Ads nos seus fones de ouvido."
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 10px 20px 30px 20px;">
+                    <h2 style="font-size: 32px; font-weight: 800; color: var(--meli-dark); margin-bottom: 15px; letter-spacing: -0.5px;">O Argumento de Venda Definitivo (LTV)</h2>
+                    
+                    <p style="font-size: 16px; color: #64748b; margin-bottom: 30px;">Use este fechamento quando o lojista perguntar: <em>"Pra que eu quero ter seguidor? Eu quero é vender!"</em></p>
+
+                    <div style="background: linear-gradient(135deg, var(--meli-blue-dark), var(--meli-blue)); padding: 50px 40px; border-radius: 20px; width: 100%; margin-bottom: 25px; color: white; box-shadow: 0 15px 35px rgba(52, 131, 250, 0.2);">
+                        <span style="font-size: 90px; font-weight: 900; line-height: 1; display: block; margin-bottom: 15px; text-shadow: 0 4px 10px rgba(0,0,0,0.1);">+15%</span>
+                        <h3 style="font-size: 24px; margin-bottom: 20px;">Aumento Médio no Volume de Vendas (GMV)</h3>
+                        <p style="font-size: 16px; color: rgba(255,255,255,0.9); line-height: 1.6; max-width: 800px; margin-left: auto; margin-right: auto;">
+                            A matemática é simples: Um comprador que entra, compra e sai, vale X. <br>
+                            Quando esse mesmo comprador clica em "Seguir", ele volta mais vezes e gasta tickets maiores. O Volume Bruto de Mercadorias (GMV) que ele gera para a loja sobe em 15%.
+                        </p>
+                    </div>
+
+                    <p style="font-size: 18px; font-weight: 800; color: #b7950b; background: linear-gradient(145deg, #FFFDE7, #FFF9C4); border: 2px solid #f0e13c; padding: 20px; border-radius: 12px; width: 100%; box-shadow: var(--shadow-sm);">
+                        Conclusão comercial: "Você não está comprando um 'Like', você está comprando a fidelização da carteira do cliente."
+                    </p>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <div class="finish-overlay" id="finishOverlay">
+        <div class="finish-content">
+            <div class="success-checkmark">✓</div>
+            <h2 class="finish-title">Treinamento Concluído!</h2>
+            <p class="finish-subtitle">Parabéns, equipe! Vocês têm os argumentos perfeitos em mãos para liderar as vendas de Ads. Vamos dominar o mercado!</p>
+            <button class="btn-restart" id="restartBtn">↻ Reiniciar Apresentação</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const menuItems = document.querySelectorAll('.sidebar-menu li');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentSlideSpan = document.getElementById('currentSlide');
+        const mainScroll = document.getElementById('mainScroll');
+        
+        const finishOverlay = document.getElementById('finishOverlay');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        let currentSlideIndex = 0;
+
+        function updateSlider() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlideIndex);
+                if(menuItems[index]) {
+                    menuItems[index].classList.toggle('active', index === currentSlideIndex);
+                }
+            });
+            
+            currentSlideSpan.textContent = currentSlideIndex + 1;
+            prevBtn.disabled = currentSlideIndex === 0;
+            
+            if(currentSlideIndex === slides.length - 1) {
+                nextBtn.innerHTML = "Finalizar Demonstração 🚀";
+                nextBtn.classList.replace('btn-blue', 'btn-yellow');
+            } else {
+                nextBtn.innerHTML = "Próxima ▶";
+                if(nextBtn.classList.contains('btn-yellow')){
+                    nextBtn.classList.replace('btn-yellow', 'btn-blue');
+                }
+            }
+
+            mainScroll.scrollTop = 0;
+            resetMockup();
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlideIndex > 0) { currentSlideIndex--; updateSlider(); }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlideIndex < slides.length - 1) { 
+                currentSlideIndex++; 
+                updateSlider(); 
+            } else {
+                // Aciona a animação de finalização
+                finishOverlay.classList.add('active');
+            }
+        });
+
+        restartBtn.addEventListener('click', () => {
+            // Remove a animação e reinicia
+            finishOverlay.classList.remove('active');
+            setTimeout(() => {
+                currentSlideIndex = 0;
+                updateSlider();
+            }, 400); // Espera o fade out da tela preta
+        });
+
+        menuItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                currentSlideIndex = index;
+                updateSlider();
+            });
+        });
+
+        const mockupBtn = document.getElementById('mockup-btn');
+        let isFollowing = false;
+
+        if(mockupBtn) {
+            mockupBtn.addEventListener('click', function() {
+                if(!isFollowing) {
+                    this.textContent = "➔ Ver Ofertas (10% OFF)";
+                    this.style.backgroundColor = 'var(--meli-dark)';
+                    this.style.color = '#fff';
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => { this.style.transform = 'scale(1)'; }, 150);
+                    isFollowing = true;
+                } else {
+                    alert("Simulação: O comprador agora será redirecionado para a Minha Página com a lista de produtos já filtrada e o cupom aplicado!");
+                    resetMockup();
+                }
+            });
+        }
+
+        function resetMockup() {
+            isFollowing = false;
+            if(mockupBtn) {
+                mockupBtn.textContent = "+ Seguir";
+                mockupBtn.style.backgroundColor = 'var(--meli-blue)';
+                mockupBtn.style.color = '#fff';
+            }
+        }
+
+        updateSlider(); // Init
+    </script>
+</body>
+</html>
